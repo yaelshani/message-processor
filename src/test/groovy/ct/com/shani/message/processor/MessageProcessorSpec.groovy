@@ -6,6 +6,8 @@ import spock.lang.Specification
 class MessageProcessorSpec  extends Specification {
 
     public static final String STATUS_NOT_FOUND = "Not-Found"
+    public static final String ACCEPTED = "Accepted"
+    public static final String COMPLETE = "Complete"
 
     @Shared
     AppDriver app = new AppDriver()
@@ -24,6 +26,14 @@ class MessageProcessorSpec  extends Specification {
 
         then:
         assert status == STATUS_NOT_FOUND
+    }
+
+    def "should receive message id when submitting message"() {
+        when:
+        String messageId = app.sendMessage("What's up doc?")
+
+        then:
+        assert app.getStatus(messageId) == COMPLETE
     }
 
 

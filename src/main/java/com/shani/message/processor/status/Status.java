@@ -1,7 +1,11 @@
 package com.shani.message.processor.status;
 
 public enum Status {
-    NotFound("Not-Found");
+    NotFound("Not-Found"),
+    Accepted("Accepted"),
+    Processing("Processing"),
+    Complete("Complete"),
+    Error("Error");
 
     private String display;
 

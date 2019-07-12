@@ -37,6 +37,12 @@ dependencies {
     }
     compile "org.springframework.boot:spring-boot-starter-jetty"
     compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework.boot:spring-boot-starter-data-mongodb"
+
+    //Fake Mongo
+//    compile 'org.testcontainers:testcontainers:1.11.4'
+    compile group: 'de.flapdoodle.embed', name: 'de.flapdoodle.embed.mongo', version: '2.2.0'
+
 
     // Java test
     testCompile 'org.hamcrest:hamcrest-all:1.3'
