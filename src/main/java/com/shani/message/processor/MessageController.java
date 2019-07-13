@@ -1,6 +1,7 @@
 package com.shani.message.processor;
 
-import com.shani.message.processor.process.MessageTask;
+import com.shani.message.processor.process.MessageEntity;
+import com.shani.message.processor.process.MessageRepository;
 import com.shani.message.processor.status.Status;
 import com.shani.message.processor.status.StatusResponse;
 import com.shani.message.processor.status.StatusService;
@@ -17,10 +18,12 @@ import java.util.concurrent.Callable;
 public class MessageController {
 
     private StatusService statusService;
+    private MessageRepository messageRepository;
 
     @Autowired
-    public MessageController(StatusService statusService) {
+    public MessageController(StatusService statusService, MessageRepository messageRepository) {
         this.statusService = statusService;
+        this.messageRepository = messageRepository;
     }
 
     @GetMapping("/{messageId}/status")
@@ -33,9 +36,10 @@ public class MessageController {
     public Callable<ResponseEntity<MessageResponse>> processMessage(@RequestBody String message) {
         log.info("Received request to process message [{}]", message);
         return () -> {
-            MessageTask task = MessageTask.createTask(message);
-            statusService.updateStatus(task.getMessageId(), Status.Accepted);
-            return ResponseEntity.accepted().body(MessageResponse.builder().messageId(task.getMessageId()).build());
+            MessageEntity messageEntity = new MessageEntity(message);
+            messageRepository.save(messageEntity);
+            statusService.saveNewMessage(messageEntity);
+            return ResponseEntity.accepted().body(MessageResponse.builder().messageId(messageEntity.getMessageId()).build());
         };
     }
 }

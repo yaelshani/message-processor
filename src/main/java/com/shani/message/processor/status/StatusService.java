@@ -1,5 +1,6 @@
 package com.shani.message.processor.status;
 
+import com.shani.message.processor.process.MessageEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -20,18 +21,24 @@ public class StatusService {
 
     public void updateStatus(String messageId, Status status) {
         log.info("Updating messageId {} to status {}", messageId, status);
-        MessageStatus messageStatus = MessageStatus.createStatusFrom(messageId, status);
-        statusRepository.save(messageStatus);
+        TaskStatus taskStatus = new TaskStatus(messageId, status);
+        statusRepository.save(taskStatus);
+    }
+
+    public void saveNewMessage(MessageEntity messageEntity) {
+        log.info("Save new messageId {} ", messageEntity.getMessageId());
+        TaskStatus taskStatus = new TaskStatus(messageEntity.getMessageId(), Status.Accepted);
+        statusRepository.save(taskStatus);
     }
 
     @Cacheable(STATUS_CACHE)
     public Status getStatus(String messageId) {
         log.info("Get status for messageId {}", messageId);
-        MessageStatus messageStatus = statusRepository.findOne(messageId);
-        if (messageStatus == null) {
+        TaskStatus taskStatus = statusRepository.findOne(messageId);
+        if (taskStatus == null) {
             return Status.NotFound;
         }
-        return messageStatus.getStatus();
+        return taskStatus.getStatus();
     }
 
 }

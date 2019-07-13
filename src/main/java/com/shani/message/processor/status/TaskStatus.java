@@ -11,15 +11,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "message-status")
-public class MessageStatus {
+@Document(collection = "tasks")
+public class TaskStatus {
 
     @Id
     private String messageId;
     private Status status;
     private Long timestamp;
 
-    public static MessageStatus createStatusFrom(String messageId, Status status) {
-        return MessageStatus.builder().messageId(messageId).status(status).timestamp(System.currentTimeMillis()).build();
+    public TaskStatus(String messageId, Status status) {
+        this.messageId = messageId;
+        this.status = status;
+        this.timestamp = System.currentTimeMillis();
     }
 }
