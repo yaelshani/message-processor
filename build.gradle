@@ -1,4 +1,9 @@
 buildscript {
+    ext.deps = [
+            springBootVersion: "1.5.9.RELEASE",
+            log4jVersion     : "2.10.0"
+    ]
+
     repositories {
         mavenCentral()
     }
@@ -26,6 +31,19 @@ repositories {
 }
 
 dependencies {
+    configurations {
+        all*.exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+        all*.exclude group: "ch.qos.logback"
+        all*.exclude group: "org.slf4j", module: "log4j-over-slf4j" // allow using log4j 2.x
+        all*.exclude group: "org.slf4j", module: "slf4j-simple"     // log4j is the configured backend
+    }
+
+    compile "org.springframework.boot:spring-boot-starter-log4j2:${deps.springBootVersion}"
+    compile "org.apache.logging.log4j:log4j-api:${deps.log4jVersion}"
+    compile "org.apache.logging.log4j:log4j-core:${deps.log4jVersion}"
+    compile "org.apache.logging.log4j:log4j-web:${deps.log4jVersion}"
+    compile "org.apache.logging.log4j:log4j-jcl:${deps.log4jVersion}"
+    compile "org.apache.logging.log4j:log4j-slf4j-impl:${deps.log4jVersion}" // send all slf4j events to log4j 2.x
 
     // General
     compileOnly "org.projectlombok:lombok:1.18.4"
@@ -54,6 +72,7 @@ dependencies {
     testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
     testCompile 'com.github.tomakehurst:wiremock-standalone:2.19.0'
+    testCompile group: 'org.awaitility', name: 'awaitility', version: '3.1.0'
 
 }
 

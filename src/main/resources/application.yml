@@ -1,0 +1,6 @@
+cache:
+  statusTtlMin: 20
+  statusMaxEntries: 1000
+
+processor:
+  processTaskDelayMillis: 10

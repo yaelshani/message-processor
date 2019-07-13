@@ -11,4 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class StatusResponse {
     private String status;
+
+    public static StatusResponse From(Status status) {
+        return StatusResponse.builder().status(status.display()).build();
+    }
 }

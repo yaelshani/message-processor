@@ -1,12 +1,15 @@
 package ct.com.shani.message.processor
 
+import org.awaitility.Awaitility
 import spock.lang.Shared
 import spock.lang.Specification
+
+import java.util.concurrent.TimeUnit
+
 
 class MessageProcessorSpec  extends Specification {
 
     public static final String STATUS_NOT_FOUND = "Not-Found"
-    public static final String ACCEPTED = "Accepted"
     public static final String COMPLETE = "Complete"
 
     @Shared
@@ -33,7 +36,9 @@ class MessageProcessorSpec  extends Specification {
         String messageId = app.sendMessage("What's up doc?")
 
         then:
-        assert app.getStatus(messageId) == COMPLETE
+        Awaitility.waitAtMost(10, TimeUnit.SECONDS).untilAsserted {
+            app.getStatus(messageId) == COMPLETE
+        }
     }
 
 

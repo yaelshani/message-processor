@@ -22,14 +22,10 @@ public class MessageController {
     @GetMapping("/{messageId}/status")
     public ResponseEntity<StatusResponse> getStatus(@PathVariable String messageId) {
         Status status = statusService.getStatus(messageId);
-        return ResponseEntity.ok(buildStatusResponse(status));
+        return ResponseEntity.ok(StatusResponse.From(status));
     }
 
-    private StatusResponse buildStatusResponse(Status status) {
-        return StatusResponse.builder().status(status.display()).build();
-    }
-
-    @PostMapping()
+    @PostMapping() //TODO: Callable? Spring ThreadPool?
     public ResponseEntity<MessageResponse> processMessage(@RequestBody String message) {
         MessageTask task = MessageTask.createTask(message);
         statusService.updateStatus(task.getMessageId(), Status.Accepted);
